@@ -1,0 +1,60 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+#1.Taking the Dataset
+df=pd.read_csv("/content/USA_Housing.csv")
+df
+
+#2.EDA(Exploratory Data Analysis)
+print(df.columns)#Total Types of columns
+print("\n")
+df.info()#Information about he dataset
+print("\n")
+print(df.shape)#Shape of the dataset
+print(df.size)#Size of the dataset
+print(df["Avg. Area Number of Rooms"].nunique())#Number of rooms from above dataset
+print(df["Area Population"].sum())#Total number of population
+print(df.groupby("Avg. Area Number of Bedrooms").size())
+print("\n")
+print(df.describe())
+
+
+#3.Data visualisation
+sns.heatmap(df.corr(),cmap="Blues",cbar=True,linewidth=0.5)
+sns.pairplot(df)
+
+#4.Divide into input and output
+x=df.iloc[:,0:5].values
+print(x)
+y=df.iloc[:,5].values
+print(y)
+
+
+#5.Trian and test the data
+from sklearn.model_selection import train_test_split
+x_train,x_test,y_train,y_test=train_test_split(x,y,random_state=0)
+print(x.shape)#100
+print(x_train.shape)#75%
+print(x_test.shape)#25%
+print(y.shape)#100
+print(y_train.shape)#75%
+print(y_test.shape)#25%
+
+#6.Apply a regressor,classifier or clusterer
+from sklearn.linear_model import LinearRegression
+model=LinearRegression()
+
+#7.Fit the model
+model.fit(x_train,y_train)
+
+#8.Predict the output
+prediction=model.predict(x_test)
+prediction
+plt.scatter(y_test,prediction,color="green")
+sns.displot((y_test-prediction),bins=70,color="purple")
+
+
+#This Model accuracy score(r2)
+import sklearn.metrics as sm
+round(sm.r2_score(y_test,prediction),2)*100
